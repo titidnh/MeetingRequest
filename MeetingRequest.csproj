@@ -7,4 +7,10 @@
     <Description>Generate a meeting request</Description>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Remove=".gitignore" />
+    <None Remove="LICENSE" />
+    <None Remove="README.md" />
+  </ItemGroup>
+
 </Project>
