@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Globalization;
 
 namespace MeetingRequest
@@ -29,9 +26,6 @@ namespace MeetingRequest
         /// </summary>
         public static string FormatTimeSpan(TimeSpan timespan)
         {
-            if (timespan == null)
-                return null;
-
             //A duration of 15 days, 5 hours, and 20 seconds would be: P15DT5H0M20S
 
             //"P" (dur-date / dur-time / dur-week)
