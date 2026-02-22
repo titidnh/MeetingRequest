@@ -16,7 +16,7 @@ namespace MeetingRequest
       /// Specific DateTime for the alarm
       /// </summary>
       [DataMember]
-      public DateTime SpecificDateTime { get; set; }
+      public DateTimeOffset SpecificDateTime { get; set; }
 
       /// <summary>
       /// Format the trigger data

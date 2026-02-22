@@ -1,0 +1,50 @@
+name: Build and publish NuGet package on PR merge
+
+on:
+  pull_request:
+    types: [closed]
+  workflow_dispatch:
+
+jobs:
+  build-and-publish:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v3
+        with:
+          # Use a modern SDK that can build all target frameworks in the repo
+          dotnet-version: '10.0.x'
+
+      - name: Show .NET info
+        run: dotnet --info
+
+      - name: Restore
+        run: dotnet restore
+
+      - name: Build (Release)
+        run: dotnet build --configuration Release --no-restore
+
+      - name: Pack
+        run: |
+          mkdir -p artifacts
+          # Pack all projects that produce a NuGet package
+          dotnet pack -c Release -o artifacts
+
+      - name: Publish NuGet packages
+        env:
+          NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+        run: |
+          echo "Publishing packages in artifacts/"
+          ls -la artifacts || true
+          for pkg in artifacts/*.nupkg; do
+            if [ -f "$pkg" ]; then
+              echo "Pushing $pkg"
+              dotnet nuget push "$pkg" --api-key "$NUGET_API_KEY" --source https://api.nuget.org/v3/index.json --skip-duplicate
+            fi
+          done

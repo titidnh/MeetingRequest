@@ -9,9 +9,9 @@ namespace MeetingRequest
     internal static class FormatHelper
     {
         /// <summary>
-        /// Format for a DateTime
+        /// Format for a DateTime (UTC - RFC/ICAL format)
         /// </summary>
-        public const string CAL_DATEFORMAT = "yyyyMMdd\\THHmmss\\Z";
+        public const string CAL_DATEFORMAT = "yyyyMMdd'T'HHmmss'Z'";
 
         /// <summary>
         /// Format an double as RFC format
