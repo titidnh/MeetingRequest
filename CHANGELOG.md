@@ -2,7 +2,7 @@
 
 All notable changes to this project are documented in this file.
 
-## 1.3.0.0
+## 2.0.0.0
 
 ### Changed
 - Made string escaping helper `ReplaceForCal` null-safe and more robust (normalizes newlines, escapes backslashes/commas/semicolons).
@@ -23,4 +23,4 @@ All notable changes to this project are documented in this file.
 - Recommended: add unit tests for iCalendar generation (escaping and timezone correctness) and enable nullable reference types for improved safety.
 
 ### Previous
-- Initial package metadata present in `MeetingRequest.csproj` (version `1.3.0.0`).
+- Initial package metadata present in `MeetingRequest.csproj` (version `2.0.0.0`).
