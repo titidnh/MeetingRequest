@@ -97,6 +97,12 @@ namespace MeetingRequest
       public EventStatus Status { get; set; }
 
       /// <summary>
+      /// Time when the calendar information was created.
+      /// </summary>
+      [DataMember]
+      public DateTimeOffset? DtStamp { get; set; }
+
+      /// <summary>
       /// Create a new event
       /// </summary>
       public Event()
@@ -114,12 +120,18 @@ namespace MeetingRequest
       /// </summary>
       string ICalendarElement.GetFormattedElement()
       {
+         if (string.IsNullOrWhiteSpace(this.UID))
+            throw new InvalidOperationException("VEVENT requires UID.");
+
+         if (this.StartTime == default(DateTimeOffset))
+            throw new InvalidOperationException("VEVENT requires DTSTART.");
+
          StringBuilder sb = new StringBuilder();
          sb.AppendLine("BEGIN:VEVENT");
 
          sb.AppendLine("SEQUENCE:" + this.SequenceNbr.ToString());
          sb.AppendLine("UID:" + this.UID);
-         sb.AppendLine("DTSTAMP:" + this.StartTime.ToUniversalTime().ToString(FormatHelper.CAL_DATEFORMAT));
+         sb.AppendLine("DTSTAMP:" + (this.DtStamp ?? DateTimeOffset.UtcNow).ToUniversalTime().ToString(FormatHelper.CAL_DATEFORMAT));
 
          if ( this.Organizer != null )
             sb.AppendLine("ORGANIZER;" + this.Organizer.GetFormattedElement());
@@ -144,7 +156,7 @@ namespace MeetingRequest
             sb.AppendLine("GEO:" + this.GpsCoordinate.GetFormattedElement());
 
          if ( this.categories.Count > 0 )
-            sb.Append("CATEGORIES:" + string.Join(",", this.categories.Select(elt => elt.ToUpperInvariant().ReplaceForCal()).ToArray()));
+            sb.AppendLine("CATEGORIES:" + string.Join(",", this.categories.Select(elt => elt.ToUpperInvariant().ReplaceForCal()).ToArray()));
 
          if ( !string.IsNullOrEmpty(this.Description) )
             sb.AppendLine("DESCRIPTION:" + this.Description.ReplaceForCal());

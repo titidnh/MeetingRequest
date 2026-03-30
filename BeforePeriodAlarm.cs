@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Runtime.Serialization;
 
 namespace MeetingRequest
@@ -23,7 +20,7 @@ namespace MeetingRequest
       /// </summary>
       protected override string GetTriggerString()
       {
-         return ":-" + FormatHelper.FormatTimeSpan(this.BeforeTime);
+         return ":-" + FormatHelper.FormatTimeSpan(this.BeforeTime.Duration());
       }
    }
 }

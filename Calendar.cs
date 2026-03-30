@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Text;
@@ -59,19 +60,23 @@ namespace MeetingRequest
       /// </summary>
       public string GetCalendarContentText()
       {
+         if (string.IsNullOrWhiteSpace(this.ProdID))
+            throw new InvalidOperationException("VCALENDAR requires PRODID.");
+
+         if (string.IsNullOrWhiteSpace(this.Version))
+            throw new InvalidOperationException("VCALENDAR requires VERSION.");
+
          StringBuilder sb = new StringBuilder();
          sb.AppendLine("BEGIN:VCALENDAR");
-         if (!string.IsNullOrEmpty(this.ProdID))
-            sb.AppendLine("PRODID:-//" + this.ProdID);
-         if (!string.IsNullOrEmpty(this.Version))
-            sb.AppendLine("VERSION:" + this.Version);
+         sb.AppendLine("PRODID:-//" + this.ProdID);
+         sb.AppendLine("VERSION:" + this.Version);
          sb.AppendLine("METHOD:" + CalendarMethodHelper.CalendarMethod(this.CalendarMethod));
 
          foreach (ICalendarElement element in this.Elements)
             sb.Append(element.GetFormattedElement());
 
          sb.Append("END:VCALENDAR");
-         return sb.ToString();
+         return FormatHelper.NormalizeAndFoldContent(sb.ToString());
       }
    }
 }

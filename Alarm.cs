@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Runtime.Serialization;
+using System.Text;
 
 namespace MeetingRequest
 {
@@ -47,16 +45,25 @@ namespace MeetingRequest
          string trigger = this.GetTriggerString();
          if ( !string.IsNullOrEmpty(trigger) )
             sb.AppendLine("TRIGGER" + trigger);
-         if ( this.Repeat.HasValue )
-            sb.AppendLine("REPEAT:" + this.Repeat.Value);
 
-         var duration = FormatHelper.FormatTimeSpan(this.Duration);
-         if ( !string.IsNullOrEmpty(duration) )
-            sb.AppendLine("DURATION:" + duration);
+         bool hasRepeat = this.Repeat.HasValue;
+         bool hasDuration = this.Duration != TimeSpan.Zero;
+
+         if (hasRepeat != hasDuration)
+            throw new InvalidOperationException("VALARM requires both DURATION and REPEAT when one is present.");
+
+         if (hasRepeat)
+         {
+            sb.AppendLine("REPEAT:" + this.Repeat.Value);
+            sb.AppendLine("DURATION:" + FormatHelper.FormatTimeSpan(this.Duration));
+         }
 
          sb.AppendLine("ACTION:DISPLAY");
-         if ( !string.IsNullOrEmpty(this.Description) )
-            sb.AppendLine("" + this.Description);
+
+         if (string.IsNullOrEmpty(this.Description))
+            throw new InvalidOperationException("DISPLAY alarm requires DESCRIPTION.");
+
+         sb.AppendLine("DESCRIPTION:" + this.Description.ReplaceForCal());
 
          sb.AppendLine("END:VALARM");
          return sb.ToString();
