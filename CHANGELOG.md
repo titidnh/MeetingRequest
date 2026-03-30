@@ -2,6 +2,18 @@
 
 All notable changes to this project are documented in this file.
 
+## 2.0.1.0
+
+### Changed
+- Bumped package version to `2.0.1.0` in `MeetingRequest.csproj`.
+- Updated NuGet packaging metadata to include `GeneratePackageOnBuild`, `PackageReadmeFile`, and ensure `LICENSE` and `README.md` are included in the package.
+
+### Documentation
+- Packaging metadata updated so `README.md` and `LICENSE` are distributed in the NuGet package.
+
+### Notes / Migration
+- No public API changes; consumers can upgrade to `2.0.1.0` without code changes. Update package references as needed.
+
 ## 2.0.0.0
 
 ### Changed
